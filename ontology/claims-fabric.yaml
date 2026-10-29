@@ -1,0 +1,193 @@
+ontology:
+  name: AutoClaimsOntology
+  display_name: ACORD Auto Claims Phase 0
+  version: 0.1.0
+  namespace: https://data.yourco.com/onto/claims/
+  canonical_source: ../../ontology/auto-claims-phase0/claims-ontology.ttl
+  standards:
+    - W3C RDF
+    - W3C OWL 2
+    - W3C SKOS
+    - W3C SHACL
+  authoritative_business_source:
+    - ACORD Information Model 2.7
+    - ACORD Data Model 2.7.2
+
+entity_types:
+  Claim:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Claim
+    description: A claim record associated with a loss occurrence and financial services agreement.
+    key_property: claimKey
+    properties:
+      claimKey: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/claimKey }
+      decisionReason: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/decisionReason }
+      coveragePercentage: { type: decimal, acord_iri: https://data.yourco.com/onto/claims/acord/coveragePercentage }
+
+  LossNotification:
+    acord_iri: https://data.yourco.com/onto/claims/acord/LossNotification
+    description: A notification that a loss has occurred and is reported to an insurer or responsible party.
+    key_property: activityKey
+    properties:
+      declarationDateTime: { type: datetime, acord_iri: https://data.yourco.com/onto/claims/acord/declarationDateTime }
+      receptionDateTime: { type: datetime, acord_iri: https://data.yourco.com/onto/claims/acord/receptionDateTime }
+      completionDateTime: { type: datetime, acord_iri: https://data.yourco.com/onto/claims/acord/completionDateTime }
+
+  LossOccurrence:
+    acord_iri: https://data.yourco.com/onto/claims/acord/LossOccurrence
+    description: The loss, damage, injury, or other claim-relevant event.
+    key_property: lossOccurrenceKey
+    properties:
+      dateTime: { type: datetime, acord_iri: https://data.yourco.com/onto/claims/acord/dateTime }
+      description: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/description }
+
+  FinancialServicesAgreement:
+    acord_iri: https://data.yourco.com/onto/claims/acord/FinancialServicesAgreement
+    description: An agreement under which financial services, including insurance coverage, may be provided.
+    key_property: agreementKey
+    properties:
+      agreementKey: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/agreementKey }
+
+  Party:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Party
+    description: A person or organization participating in the insurance business context.
+    key_property: partyKey
+
+  ClaimDeclarer:
+    acord_iri: https://data.yourco.com/onto/claims/acord/ClaimDeclarer
+    description: A party role that declares a claim or loss.
+    key_property: roleKey
+
+  PartyRoleInClaim:
+    acord_iri: https://data.yourco.com/onto/claims/acord/PartyRoleInClaim
+    description: A party role played in relation to a claim.
+    key_property: roleKey
+
+  Vehicle:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Vehicle
+    description: A vehicle involved in an Auto loss.
+    key_property: vehicleKey
+    properties:
+      vehicleKey: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/vehicleKey }
+
+  Driver:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Driver
+    description: A driver role associated with a vehicle.
+    key_property: roleKey
+
+  Place:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Place
+    description: A location associated with a loss occurrence.
+    key_property: placeKey
+    properties:
+      placeKey: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/placeKey }
+      placeName: { type: string, acord_iri: https://data.yourco.com/onto/claims/acord/placeName }
+
+  Peril:
+    acord_iri: https://data.yourco.com/onto/claims/acord/Peril
+    description: A peril or hazard involved in or producing the loss.
+    key_property: perilKey
+
+  ClaimStatus:
+    acord_iri: https://data.yourco.com/onto/claims/acord/ClaimStatus
+    description: The lifecycle status of a claim.
+    reference_scheme: https://data.yourco.com/onto/claims/ref/ClaimStatusScheme
+
+  CommunicationMedium:
+    acord_iri: https://data.yourco.com/onto/claims/acord/CommunicationMedium
+    description: The medium used to report the loss notification.
+    reference_scheme: https://data.yourco.com/onto/claims/ref/CommunicationMediumScheme
+
+relationships:
+  - name: initiatingLossOccurrence
+    source: Claim
+    target: LossOccurrence
+    acord_iri: https://data.yourco.com/onto/claims/acord/initiatingLossOccurrence
+    cardinality: 0..1
+
+  - name: claimedFinancialServicesAgreement
+    source: Claim
+    target: FinancialServicesAgreement
+    acord_iri: https://data.yourco.com/onto/claims/acord/claimedFinancialServicesAgreement
+    cardinality: 0..1
+
+  - name: status
+    source: Claim
+    target: ClaimStatus
+    acord_iri: https://data.yourco.com/onto/claims/acord/status
+    cardinality: 0..1
+
+  - name: describedLossOccurrence
+    source: LossNotification
+    target: LossOccurrence
+    acord_iri: https://data.yourco.com/onto/claims/acord/describedLossOccurrence
+    cardinality: 0..1
+
+  - name: identifiedFinancialServicesAgreement
+    source: LossNotification
+    target: FinancialServicesAgreement
+    acord_iri: https://data.yourco.com/onto/claims/acord/identifiedFinancialServicesAgreement
+    cardinality: 0..*
+
+  - name: method
+    source: LossNotification
+    target: CommunicationMedium
+    acord_iri: https://data.yourco.com/onto/claims/acord/method
+    cardinality: 0..1
+
+  - name: reportedByClaimDeclarer
+    source: LossNotification
+    target: ClaimDeclarer
+    acord_iri: https://data.yourco.com/onto/claims/ext/reportedByClaimDeclarer
+    profile: Phase 0 extension
+    cardinality: 0..1
+
+  - name: involvedPeril
+    source: LossOccurrence
+    target: Peril
+    acord_iri: https://data.yourco.com/onto/claims/acord/involvedPeril
+    cardinality: 0..1
+
+  - name: occurringPlace
+    source: LossOccurrence
+    target: Place
+    acord_iri: https://data.yourco.com/onto/claims/acord/occurringPlace
+    cardinality: 0..1
+
+  - name: initiatedClaim
+    source: LossOccurrence
+    target: Claim
+    acord_iri: https://data.yourco.com/onto/claims/acord/initiatedClaim
+    cardinality: 0..*
+
+  - name: involvedVehicle
+    source: LossOccurrence
+    target: Vehicle
+    acord_iri: https://data.yourco.com/onto/claims/acord/involvedVehicle
+    cardinality: 0..*
+
+  - name: party
+    source: PartyRoleInClaim
+    target: Party
+    acord_iri: https://data.yourco.com/onto/claims/acord/party
+    cardinality: 0..1
+
+  - name: involvingClaim
+    source: PartyRoleInClaim
+    target: Claim
+    acord_iri: https://data.yourco.com/onto/claims/acord/involvingClaim
+    cardinality: 0..1
+
+bindings:
+  mode: lakehouse_tables
+  status: planned
+  entities:
+    Claim: { table: claims_fact, key_column: claim_key }
+    LossNotification: { table: loss_notification, key_column: loss_notification_key }
+    LossOccurrence: { table: loss_occurrence, key_column: loss_occurrence_key }
+    FinancialServicesAgreement: { table: financial_services_agreement, key_column: agreement_key }
+    Party: { table: party, key_column: party_key }
+    ClaimDeclarer: { table: claim_declarer, key_column: role_key }
+    Vehicle: { table: vehicle, key_column: vehicle_key }
+    Place: { table: place, key_column: place_key }
+    Peril: { table: peril, key_column: peril_key }
+

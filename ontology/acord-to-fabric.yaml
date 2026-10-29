@@ -1,0 +1,32 @@
+mapping_metadata:
+  purpose: Trace Fabric implementation terms back to the canonical ACORD ontology.
+  canonical_ontology: ../../ontology/auto-claims-phase0/claims-ontology.ttl
+  mapping_status: draft
+
+guidewire:
+  FNOL: LossNotification
+  ReportedBy: ext:reportedByClaimDeclarer
+  HowReported: method
+  DateOfNotice: declarationDateTime
+  LossDate: dateTime
+  LossCause: involvedPeril
+  LossLocation: occurringPlace
+  Policy: FinancialServicesAgreement
+
+fabric_table_crosswalk:
+  claims_fact:
+    entity_type: Claim
+    key_column: claim_key
+  loss_notification:
+    entity_type: LossNotification
+    key_column: loss_notification_key
+  loss_occurrence:
+    entity_type: LossOccurrence
+    key_column: loss_occurrence_key
+  financial_services_agreement:
+    entity_type: FinancialServicesAgreement
+    key_column: agreement_key
+  vehicle:
+    entity_type: Vehicle
+    key_column: vehicle_key
+
